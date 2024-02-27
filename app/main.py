@@ -1,5 +1,15 @@
 # Uncomment this to pass the first stage
 import socket
+import threading
+
+
+def handleConnections(conn, pong):
+    with conn:
+        while True:
+            data = conn.recv(1024)
+            if not data:
+                break
+            conn.send(pong.encode())
 
 
 def main():
@@ -13,10 +23,7 @@ def main():
     
     while True:
         conn, addr = server_socket.accept() # wait for client
-        with conn:
-            while True:
-                conn.recv(1024)
-                conn.send(pong.encode())
+        threading.Thread(target=handleConnections, args=conn,pong)
 
 if __name__ == "__main__":
     main()
