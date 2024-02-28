@@ -15,7 +15,7 @@ def handleConnections(conn,pong):
     with conn:
         while True:
             data = conn.recv(1024).decode()
-            print("Data "+data)
+            print("Data "+repr(data))
             if not data:
                 break
             conn.send(pong.encode())
