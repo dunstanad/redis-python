@@ -4,12 +4,12 @@ import threading
 
 def bulkString(parts):
     if parts[2].lower() == 'ping':  # if data contains 'ping'
-        return r"$4\r\nPONG\r\n"
+        return f"$4\r\nPONG\r\n"
     else:     # if data contains 'echo some_argument'
         s = ""
         for i in range(3,len(parts)):
             s += parts[i]
-            s += r"\r\n"
+            s += f"\r\n"
         return s 
 
 
@@ -23,7 +23,7 @@ def handleConnections(conn):
             parts = data.strip().split("\r\n")  # ['*1', '$4', 'ping']   ['*2', '$4', 'echo', '$5', 'pears']
             print(parts)
             s = bulkString(parts)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
-            conn.send(s)   # sending the bulk string as response
+            conn.send(s.encode())   # encoding the bulk string as response
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
