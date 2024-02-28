@@ -2,10 +2,10 @@ import socket
 import threading
 
 
-def bulkRESP(parts):
+def bulkString(parts):
     if parts[2].lower() == 'ping':  # if data contains 'ping'
         return r"$4\r\nPONG\r\n"
-    else:     # if data contains 'echo something'
+    else:     # if data contains 'echo some_argument'
         s = ""
         for i in range(3,len(parts)):
             s += parts[i]
@@ -22,8 +22,8 @@ def handleConnections(conn):
             print("Data "+repr(data))  # this will print something like *1\r\n$4\r\nping\r\n   or  *2\r\n$4\r\necho\r\n$5\r\npears\r\n  
             parts = data.strip().split("\r\n")  # ['*1', '$4', 'ping']   ['*2', '$4', 'echo', '$5', 'pears']
             print(parts)
-            s = bulkRESP(parts)  # final string
-            conn.send(s.encode())  # sending bulk string
+            s = bulkString(parts)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
+            conn.send(s)   # sending the bulk string as response
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
