@@ -15,7 +15,7 @@ def bulkString(parts):
         return s
     elif command == 'set':
         dict[parts[4]]  = parts[5]  # eg. parts = ['*2', '$3', 'set','$5','fruit' ,'$5', 'pears']
-        return f"$2\r\nOK\r\n"   # send OK as response to set command
+        return "+OK\r\n"   # send OK as response to set command
 
 
 def handleConnections(conn):
