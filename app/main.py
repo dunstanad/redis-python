@@ -15,7 +15,7 @@ def bulkString(parts):
         return s
     elif command == 'set':
         dictionary[parts[4]]  = parts[6]  # eg. parts = ['*2', '$3', 'set','$5','fruit' ,'$5', 'pears']
-        print("Key: "+parts[4]+"  Value: "+parts[5])
+        print("Key: "+parts[4]+"  Value: "+parts[6])
         return "+OK\r\n"   # send OK as response to set command
     elif command == 'get':  
         key = parts[4]      #fetching key   eg.  parts = ['*2', '$3', 'get','$5','fruit']
