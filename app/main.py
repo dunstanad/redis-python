@@ -14,9 +14,18 @@ def bulkString(parts):
             s += f"\r\n"
         return s
     elif command == 'set':
-        dictionary[parts[4]]  = parts[5]  # eg. parts = ['*2', '$3', 'set','$5','fruit' ,'$5', 'pears']
+        dictionary[parts[4]]  = parts[6]  # eg. parts = ['*2', '$3', 'set','$5','fruit' ,'$5', 'pears']
         print("Key: "+parts[4]+"  Value: "+parts[5])
         return "+OK\r\n"   # send OK as response to set command
+    elif command == 'get':  
+        key = parts[4]      #fetching key   eg.  parts = ['*2', '$3', 'get','$5','fruit']
+        if key in dictionary:  #check if key is present in dictionary
+            value = dictionary[key]        # fetching value
+            return f"${len(value)}\r\n{val}\r\n"    # return bulk string with value
+        else: 
+            return "$-1\r\n"   #return null bulk stirng if no key is present
+                    
+
 
 
 def handleConnections(conn):
