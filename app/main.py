@@ -14,7 +14,7 @@ def bulkString(parts):
             s += f"\r\n"
         return s
     elif command == 'set':
-        dict[parts[4]]  = parts[5]  # eg. parts = ['*2', '$3', 'set','$5','fruit' ,'$5', 'pears']
+        dictionary[parts[4]]  = parts[5]  # eg. parts = ['*2', '$3', 'set','$5','fruit' ,'$5', 'pears']
         return "+OK\r\n"   # send OK as response to set command
 
 
