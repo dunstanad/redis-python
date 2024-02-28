@@ -9,15 +9,32 @@ import threading
 #             if not data:
 #                 break
 #             conn.send(pong.encode())
+# def bulkRESP(parts):
+#     if parts[2].lower() == 'ping':
+#         return r"$4\r\nPONG\r\n"
+#     else:
 
 
-def handleConnections(conn,pong):
+#     for i in range(1,len(parts)-1):
+    
+
+
+#     pass
+
+def handleConnections(conn):
     with conn:
         while True:
             data = conn.recv(1024).decode()
-            print("Data "+repr(data))
             if not data:
                 break
+            print("Data "+repr(data))  # this will print something like *1\r\n$4\r\nping\r\n   or  *2\r\n$4\r\necho\r\n$5\r\npears\r\n  
+            parts = data.split("\r\n")  # ['*1', '$4', 'ping', '']   ['*2', '$4', 'echo', '$5', 'pears', '']
+            print(parts)
+            #bulkRESP(parts)
+            
+
+
+
             conn.send(pong.encode())
 
 def main():
@@ -30,7 +47,7 @@ def main():
     
     while True:
         conn, addr = server_socket.accept() # wait for client
-        threading.Thread(target=handleConnections, args=(conn,pong)).start()
+        threading.Thread(target=handleConnections, args=(conn,)).start()
 
 if __name__ == "__main__":
     main()
