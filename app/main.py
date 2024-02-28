@@ -21,7 +21,7 @@ def bulkString(parts):
         key = parts[4]      #fetching key   eg.  parts = ['*2', '$3', 'get','$5','fruit']
         if key in dictionary:  #check if key is present in dictionary
             value = dictionary[key]        # fetching value
-            return f"${len(value)}\r\n{val}\r\n"    # return bulk string with value
+            return f"${len(value)}\r\n{value}\r\n"    # return bulk string with value
         else: 
             return "$-1\r\n"   #return null bulk stirng if no key is present
                     
