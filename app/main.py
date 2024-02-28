@@ -1,16 +1,21 @@
 import socket
 import threading
 
-
+dictionary = dict()  # store all the key value pairs
 def bulkString(parts):
-    if parts[2].lower() == 'ping':  # if data contains 'ping'
+    command = parts[2].lower()
+
+    if command == 'ping':  # if data contains 'ping'
         return f"$4\r\nPONG\r\n"
-    else:     # if data contains 'echo some_argument'
+    elif command == 'echo':     # if data contains 'echo some_argument'
         s = ""
         for i in range(3,len(parts)):
             s += parts[i]
             s += f"\r\n"
-        return s 
+        return s
+    elif command == 'set':
+        dict[parts[4]]  = parts[5]  # eg. parts = ['*2', '$3', 'set','$5','fruit' ,'$5', 'pears']
+        return f"+OK\r\n"   # send OK as response to set command
 
 
 def handleConnections(conn):
