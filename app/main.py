@@ -18,7 +18,7 @@ def handleConnections(conn):
             print("Data "+data)
             if not data:
                 break
-            #conn.send(pong.encode())
+            conn.send(pong.encode())
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
