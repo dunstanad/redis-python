@@ -9,6 +9,7 @@ dictionary = dict()  # store all the key value pairs
 
 
 def checkPX(pxvalue):   # function checks if there is px
+    print("WE ARE IN checkPX")
     return pxvalue.lower() == 'px'
 
 def setExpiry(key, value, millsecsValue):
