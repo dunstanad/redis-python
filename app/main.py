@@ -89,7 +89,7 @@ def bulkString(parts):
 
         if key in dictionary and hasExpiry(key):  #check if key is present and has expiration
             if not checkIfExpired(key):  # check if the key is expired
-                value = dictionary[key]        # fetching value
+                value = dictionary[key]['value']        # fetching value
                 return f"${len(value)}\r\n{value}\r\n"    # return bulk string with value
 
         elif key in dictionary and not hasExpiry(key): #check if key is present and has no expiration
