@@ -57,7 +57,9 @@ def bulkString(parts):
         if elementsPassed > 3:   # check if more than 3 elements:   set foo bar px 100
             if checkPX(parts[8]):  # check if px exists  
                 print("Going to set expiry")
-                setExpiry(key, value, int(parts[10]))  # int(parts[10]) is  milliseconds value
+                milliseconds = int(parts[10])
+                print(milliseconds)
+                setExpiry(key, value, milliseconds)  # int(parts[10]) is  milliseconds value
                 print("Expiry set successfully")
                 #return "+OK\r\n"   # send OK as response to set command
         else:
