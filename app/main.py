@@ -16,7 +16,7 @@ def checkPX(pxvalue):   # function checks if there is px
 def setExpiry(key, value, millsecsValue):
     expire = datetime.datetime.now() + datetime.timedelta(microseconds= millsecsValue*1000)
     dictionary[key] = {'value': value, 'expiration': expire}
-    print("Key: "+parts[4]+"  Value: "+parts[6]+ " Expiration: "+expire)
+    print("Key: "+key+"  Value: "+value+ " Expiration: "+expire)
 
 
 def checkIfExpired(key):  
