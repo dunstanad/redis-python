@@ -27,6 +27,7 @@ def setKeyExpiry(key, value, microsecs):
     print(current)
     time_delta = timedelta(microseconds= microsecs)
     expire = current  + time_delta
+    print(time_delta)
     dictionary[key] = {'value': value, 'expiration': expire}
     print("Key: ",key,"  Value: ",value, " Expiration: "+expire)
     print("Key: ",key,"  Value: ",value," Microseconds: "+microsecs)
@@ -72,7 +73,7 @@ def bulkString(parts):
                 print(microsecs)
                 setKeyExpiry(key, value, microsecs) 
                 print("Expiry set successfully")
-                return "+OK\r\n"   # send OK as response to set command
+                #return "+OK\r\n"   # send OK as response to set command
         else:
             dictionary[key]  = value  # eg. parts = ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
             print("Key: "+key+"  Value: "+value)
