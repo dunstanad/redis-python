@@ -112,8 +112,8 @@ def handleConnections(conn):
                 s = bulkString(parts)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
                 print("Response ",s)
                 conn.send(s.encode())   # encoding the bulk string as response
-    except:
-        print("there is an error")
+    except Exception as e:
+        print("the error is ",e)
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
