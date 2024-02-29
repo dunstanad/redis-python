@@ -59,7 +59,7 @@ def bulkString(parts):
             if checkPX(parts[8]):  # check if px exists  
                 print("Going to set expiry")
                 microsecs = int(parts[10]) * 1000 
-                print(milliseconds)
+                print(microsecs)
                 setKeyExpiry(key, value, microsecs)  # int(parts[10]) is  milliseconds value
                 print("Expiry set successfully")
                 #return "+OK\r\n"   # send OK as response to set command
