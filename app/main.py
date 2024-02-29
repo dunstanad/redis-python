@@ -73,7 +73,7 @@ def bulkString(parts):
                 print("Going to set expiry")
                 microsecs = int(parts[10]) * 1000    # int(parts[10]) is  milliseconds value, later converted to microseconds
                 print(microsecs)
-                return setKeyExpiry(key, value, microsecs) 
+                #return setKeyExpiry(key, value, microsecs) 
                 #print("Expiry set successfully")
 
                 #return "+OK\r\n"   # send OK as response to set command
