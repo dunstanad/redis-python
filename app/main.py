@@ -18,6 +18,10 @@ def checkIfExpired(key):
 
 def setKeyExpiry(key, value, microsecs):
     print(dictionary)
+    current = datetime.datetime.now()
+    expireIn = datetime.timedelta(microseconds= microsecs)
+    expire = current + expireIn
+    print("expire -> "+expire)
     # expire = datetime.datetime.now() + datetime.timedelta(microseconds= microsecs)
     # dictionary[key] = {'value': value, 'expiration': expire}
     # print("Key: "+key+"  Value: "+value+ " Expiration: "+expire)
