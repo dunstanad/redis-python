@@ -17,12 +17,6 @@ def checkIfExpired(key):
 
 
 def setKeyExpiry(key, value, microsecs):
-    
-    # current = datetime.datetime.now()
-    # expireIn = datetime.timedelta(microseconds= microsecs)
-    # expire = current + expireIn
-    # print("expire -> "+expire)
-    print("hey we are in setkeyexpiry")
     current = datetime.now()
     print(current)
     time_delta = timedelta(microseconds= microsecs)
@@ -30,9 +24,7 @@ def setKeyExpiry(key, value, microsecs):
     print(expire)
     dictionary[key] = {'value': value, 'expiration': expire}
     print(dictionary)
-    # print("Key: ",key,"  Value: ",value, " Expiration: "+expire)
-    # print("Key: ",key,"  Value: ",value," Microseconds: "+microsecs)
-    #return "+OK\r\n"
+
 
 
 
@@ -43,6 +35,39 @@ def checkPX(pxvalue):   # function checks if there is px
 
 def hasExpiry(key):  # function to check if key has expiration as value
     return 'expiration' in dictionary[key]
+
+def commandSET(parts):
+    elementsPassed = int(parts[0][1:])    # fetch value *3 -> 3    ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
+    # elementsPassed gives no. of elements passed:  set foo bar px 100
+    key = parts[4] 
+    value = parts[6]
+  
+    if elementsPassed > 3:   # check if more than 3 elements:   set foo bar px 100
+        if checkPX(parts[8]):  # check if px exists  
+            print("Going to set expiry")
+            microsecs = int(parts[10]) * 1000    # int(parts[10]) is  milliseconds value, later converted to microseconds
+            print(microsecs)
+            setKeyExpiry(key, value, microsecs)
+            
+    else:
+        dictionary[key]  = value  # eg. parts = ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
+        print("Key: "+key+"  Value: "+value)
+
+    return "+OK\r\n"   # send OK as response to set command
+
+def commandGET(parts):
+    key = parts[4]    # eg. parts = ['*2', '$3', 'get','$5','fruit' ]
+
+    if key in dictionary and hasExpiry(key):  #check if key is present and has expiration
+        if not checkIfExpired(key):  # check if the key is expired
+            value = dictionary[key]['value']        # fetching value
+            return f"${len(value)}\r\n{value}\r\n"    # return bulk string with value
+
+    elif key in dictionary and not hasExpiry(key): #check if key is present and has no expiration
+        value = dictionary[key]        # fetching value
+        return f"${len(value)}\r\n{value}\r\n"    # return bulk string with value
+
+    return "$-1\r\n"   #return null bulk string if no key is present or expired
 
 
 
@@ -63,40 +88,40 @@ def bulkString(parts):
         return s
 
     elif command == 'set':
-        elementsPassed = int(parts[0][1:])    # fetch value *3 -> 3    ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
-        # elementsPassed gives no. of elements passed:  set foo bar px 100
-        key = parts[4] 
-        value = parts[6]
+        return commandSET(parts)
+    #     elementsPassed = int(parts[0][1:])    # fetch value *3 -> 3    ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
+    #     # elementsPassed gives no. of elements passed:  set foo bar px 100
+    #     key = parts[4] 
+    #     value = parts[6]
       
-        if elementsPassed > 3:   # check if more than 3 elements:   set foo bar px 100
-            if checkPX(parts[8]):  # check if px exists  
-                print("Going to set expiry")
-                microsecs = int(parts[10]) * 1000    # int(parts[10]) is  milliseconds value, later converted to microseconds
-                print(microsecs)
-                setKeyExpiry(key, value, microsecs)
-                #return setKeyExpiry(key, value, microsecs) 
-                #print("Expiry set successfully")
+    #     if elementsPassed > 3:   # check if more than 3 elements:   set foo bar px 100
+    #         if checkPX(parts[8]):  # check if px exists  
+    #             print("Going to set expiry")
+    #             microsecs = int(parts[10]) * 1000    # int(parts[10]) is  milliseconds value, later converted to microseconds
+    #             print(microsecs)
+    #             setKeyExpiry(key, value, microsecs)
+                
+    #     else:
+    #         dictionary[key]  = value  # eg. parts = ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
+    #         print("Key: "+key+"  Value: "+value)
 
-                #return "+OK\r\n"   # send OK as response to set command
-        else:
-            dictionary[key]  = value  # eg. parts = ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
-            print("Key: "+key+"  Value: "+value)
+    #     return "+OK\r\n"   # send OK as response to set command
 
-        return "+OK\r\n"   # send OK as response to set command
-
+    #return commandGET(parts)
     elif command == 'get': 
-        key = parts[4]    # eg. parts = ['*2', '$3', 'get','$5','fruit' ]
+        return commandGET(parts)
+        # key = parts[4]    # eg. parts = ['*2', '$3', 'get','$5','fruit' ]
 
-        if key in dictionary and hasExpiry(key):  #check if key is present and has expiration
-            if not checkIfExpired(key):  # check if the key is expired
-                value = dictionary[key]['value']        # fetching value
-                return f"${len(value)}\r\n{value}\r\n"    # return bulk string with value
+        # if key in dictionary and hasExpiry(key):  #check if key is present and has expiration
+        #     if not checkIfExpired(key):  # check if the key is expired
+        #         value = dictionary[key]['value']        # fetching value
+        #         return f"${len(value)}\r\n{value}\r\n"    # return bulk string with value
 
-        elif key in dictionary and not hasExpiry(key): #check if key is present and has no expiration
-            value = dictionary[key]        # fetching value
-            return f"${len(value)}\r\n{value}\r\n"    # return bulk string with value
+        # elif key in dictionary and not hasExpiry(key): #check if key is present and has no expiration
+        #     value = dictionary[key]        # fetching value
+        #     return f"${len(value)}\r\n{value}\r\n"    # return bulk string with value
 
-        return "$-1\r\n"   #return null bulk string if no key is present or expired
+        # return "$-1\r\n"   #return null bulk string if no key is present or expired
                     
 
 
@@ -115,7 +140,7 @@ def handleConnections(conn):
                 print("Response ",s)
                 conn.send(s.encode())   # encoding the bulk string as response
     except Exception as e:
-        print("the error is ",e)
+        print("The ERROR is ",e)
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
