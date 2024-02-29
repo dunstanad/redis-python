@@ -14,10 +14,9 @@ def checkPX(pxvalue):   # function checks if there is px
 
 
 def setKeyExpiry(key, value, microsecs):
-    # print("milli secs:"+millsecsValue+" type: "+type(millsecsValue))
-    # expire = datetime.datetime.now() + datetime.timedelta(microseconds= millsecsValue*1000)
-    # dictionary[key] = {'value': value, 'expiration': expire}
-    # print("Key: "+key+"  Value: "+value+ " Expiration: "+expire)
+    expire = datetime.datetime.now() + datetime.timedelta(microseconds= microsecs)
+    dictionary[key] = {'value': value, 'expiration': expire}
+    print("Key: "+key+"  Value: "+value+ " Expiration: "+expire)
     print("Key: "+key+"  Value: "+value+" Microseconds: "+microsecs)
 
 
@@ -58,11 +57,11 @@ def bulkString(parts):
         if elementsPassed > 3:   # check if more than 3 elements:   set foo bar px 100
             if checkPX(parts[8]):  # check if px exists  
                 print("Going to set expiry")
-                microsecs = int(parts[10]) * 1000 
+                microsecs = int(parts[10]) * 1000    # int(parts[10]) is  milliseconds value, later converted to microseconds
                 print(microsecs)
-                setKeyExpiry(key, value, microsecs)  # int(parts[10]) is  milliseconds value
+                setKeyExpiry(key, value, microsecs) 
                 print("Expiry set successfully")
-                #return "+OK\r\n"   # send OK as response to set command
+                return "+OK\r\n"   # send OK as response to set command
         else:
             dictionary[key]  = value  # eg. parts = ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
             print("Key: "+key+"  Value: "+value)
