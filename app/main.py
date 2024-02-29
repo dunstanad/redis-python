@@ -98,16 +98,19 @@ def bulkString(parts):
 
 
 def handleConnections(conn):
-    with conn:
-        while True:
-            data = conn.recv(1024*30).decode()
-            if not data:
-                break
-            print("Data "+repr(data))  # this will print something like *1\r\n$4\r\nping\r\n   or  *2\r\n$4\r\necho\r\n$5\r\npears\r\n  
-            parts = data.strip().split("\r\n")  # ['*1', '$4', 'ping']   ['*2', '$4', 'echo', '$5', 'pears']
-            print(parts)
-            s = bulkString(parts)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
-            conn.send(s.encode())   # encoding the bulk string as response
+    try:
+        with conn:
+            while True:
+                data = conn.recv(1024*30).decode()
+                if not data:
+                    break
+                print("Data "+repr(data))  # this will print something like *1\r\n$4\r\nping\r\n   or  *2\r\n$4\r\necho\r\n$5\r\npears\r\n  
+                parts = data.strip().split("\r\n")  # ['*1', '$4', 'ping']   ['*2', '$4', 'echo', '$5', 'pears']
+                print(parts)
+                s = bulkString(parts)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
+                conn.send(s.encode())   # encoding the bulk string as response
+    except:
+        print("there is an error")
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
