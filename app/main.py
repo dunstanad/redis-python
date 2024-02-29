@@ -9,7 +9,7 @@ dictionary = dict()  # store all the key value pairs
 
 
 def checkIfExpired(key):  
-    if dictionary[key]['expiration'] < datetime.datetime.now() :
+    if datetime.datetime.now() <  dictionary[key]['expiration']  :
         return False # key is not expired
     else:
         del dictionary[key] # delete key because it's expired
@@ -17,15 +17,15 @@ def checkIfExpired(key):
 
 
 def setKeyExpiry(key, value, microsecs):
-    print(dictionary)
-    current = datetime.datetime.now()
-    expireIn = datetime.timedelta(microseconds= microsecs)
-    expire = current + expireIn
-    print("expire -> "+expire)
-    # expire = datetime.datetime.now() + datetime.timedelta(microseconds= microsecs)
-    # dictionary[key] = {'value': value, 'expiration': expire}
-    # print("Key: "+key+"  Value: "+value+ " Expiration: "+expire)
-    # print("Key: "+key+"  Value: "+value+" Microseconds: "+microsecs)
+    # print(dictionary)
+    # current = datetime.datetime.now()
+    # expireIn = datetime.timedelta(microseconds= microsecs)
+    # expire = current + expireIn
+    # print("expire -> "+expire)
+    expire = datetime.datetime.now() + datetime.timedelta(microseconds= microsecs)
+    dictionary[key] = {'value': value, 'expiration': expire}
+    print("Key: "+key+"  Value: "+value+ " Expiration: "+expire)
+    print("Key: "+key+"  Value: "+value+" Microseconds: "+microsecs)
 
 
 
