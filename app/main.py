@@ -29,8 +29,8 @@ def setKeyExpiry(key, value, microsecs):
     expire = current  + time_delta
     print(expire)
     dictionary[key] = {'value': value, 'expiration': expire}
-    print("Key: ",key,"  Value: ",value, " Expiration: "+expire)
-    print("Key: ",key,"  Value: ",value," Microseconds: "+microsecs)
+    # print("Key: ",key,"  Value: ",value, " Expiration: "+expire)
+    # print("Key: ",key,"  Value: ",value," Microseconds: "+microsecs)
     return "+OK\r\n"
 
 
