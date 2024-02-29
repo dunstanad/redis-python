@@ -32,7 +32,7 @@ def setKeyExpiry(key, value, microsecs):
     print(dictionary)
     # print("Key: ",key,"  Value: ",value, " Expiration: "+expire)
     # print("Key: ",key,"  Value: ",value," Microseconds: "+microsecs)
-    return "+OK\r\n"
+    #return "+OK\r\n"
 
 
 
@@ -73,6 +73,7 @@ def bulkString(parts):
                 print("Going to set expiry")
                 microsecs = int(parts[10]) * 1000    # int(parts[10]) is  milliseconds value, later converted to microseconds
                 print(microsecs)
+                setKeyExpiry(key, value, microsecs)
                 #return setKeyExpiry(key, value, microsecs) 
                 #print("Expiry set successfully")
 
