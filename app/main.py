@@ -31,6 +31,7 @@ def setKeyExpiry(key, value, microsecs):
     dictionary[key] = {'value': value, 'expiration': expire}
     print("Key: ",key,"  Value: ",value, " Expiration: "+expire)
     print("Key: ",key,"  Value: ",value," Microseconds: "+microsecs)
+    return "+OK\r\n"
 
 
 
@@ -71,8 +72,9 @@ def bulkString(parts):
                 print("Going to set expiry")
                 microsecs = int(parts[10]) * 1000    # int(parts[10]) is  milliseconds value, later converted to microseconds
                 print(microsecs)
-                setKeyExpiry(key, value, microsecs) 
-                print("Expiry set successfully")
+                return setKeyExpiry(key, value, microsecs) 
+                #print("Expiry set successfully")
+
                 #return "+OK\r\n"   # send OK as response to set command
         else:
             dictionary[key]  = value  # eg. parts = ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
@@ -108,6 +110,7 @@ def handleConnections(conn):
                 parts = data.strip().split("\r\n")  # ['*1', '$4', 'ping']   ['*2', '$4', 'echo', '$5', 'pears']
                 print(parts)
                 s = bulkString(parts)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
+                print("Response ",s)
                 conn.send(s.encode())   # encoding the bulk string as response
     except:
         print("there is an error")
