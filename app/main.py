@@ -17,12 +17,16 @@ def setExpiry(key, value, millsecsValue):
     print("Key: "+parts[4]+"  Value: "+parts[6]+ " Expiration: "+expire)
 
 
-def checkExpiry(key):
+def checkIfExpired(key):  
     if dictionary[key]['expiration'] < datetime.datetime.now() :
         return False # key is not expired
     else:
         del dictionary[key] # delete key because it's expired
         return True  # key is expired
+
+def hasExpiry(key):  # function to check if key has expiration as value
+    return 'expiration' in dictionary[key]
+
 
 
 def bulkString(parts):
@@ -58,14 +62,17 @@ def bulkString(parts):
 
     elif command == 'get':  
         key = parts[4]    # eg. parts = ['*2', '$3', 'get','$5','fruit' ]
-        if key in dictionary:  #check if key is present in dictionary
-            if checkExpiry(key) == False:  # check if the key is expired
+        
+        if key in dictionary and hasExpiry(key):  #check if key is present and has expiration
+            if not checkIfExpired(key):  # check if the key is expired
                 value = dictionary[key]        # fetching value
                 return f"${len(value)}\r\n{value}\r\n"    # return bulk string with value
-            else:
-                return "$-1\r\n"   #return null bulk string if key is expired
 
-        return "$-1\r\n"   #return null bulk string if no key is present
+        elif key in dictionary and not hasExpiry(key): #check if key is present and has no expiration
+            value = dictionary[key]        # fetching value
+            return f"${len(value)}\r\n{value}\r\n"    # return bulk string with value
+
+        return "$-1\r\n"   #return null bulk string if no key is present or expired
                     
 
 
