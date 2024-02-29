@@ -8,9 +8,12 @@ import datetime
 dictionary = dict()  # store all the key value pairs
 
 
-def checkPX(pxvalue):   # function checks if there is px
-    print("WE ARE IN checkPX")
-    return pxvalue.lower() == 'px'
+def checkIfExpired(key):  
+    if dictionary[key]['expiration'] < datetime.datetime.now() :
+        return False # key is not expired
+    else:
+        del dictionary[key] # delete key because it's expired
+        return True  # key is expired
 
 
 def setKeyExpiry(key, value, microsecs):
@@ -20,12 +23,11 @@ def setKeyExpiry(key, value, microsecs):
     print("Key: "+key+"  Value: "+value+" Microseconds: "+microsecs)
 
 
-def checkIfExpired(key):  
-    if dictionary[key]['expiration'] < datetime.datetime.now() :
-        return False # key is not expired
-    else:
-        del dictionary[key] # delete key because it's expired
-        return True  # key is expired
+
+def checkPX(pxvalue):   # function checks if there is px
+    print("WE ARE IN checkPX")
+    return pxvalue.lower() == 'px'
+
 
 def hasExpiry(key):  # function to check if key has expiration as value
     return 'expiration' in dictionary[key]
