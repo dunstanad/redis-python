@@ -9,7 +9,7 @@ dictionary = dict()  # store all the key value pairs
 
 
 def checkIfExpired(key):  
-    if datetime.datetime.now() <  dictionary[key]['expiration']  :
+    if datetime.now() <  dictionary[key]['expiration']  :
         return False # key is not expired
     else:
         del dictionary[key] # delete key because it's expired
