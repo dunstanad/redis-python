@@ -59,11 +59,13 @@ def bulkString(parts):
     elif command == 'get':  
         key = parts[4]    # eg. parts = ['*2', '$3', 'get','$5','fruit' ]
         if key in dictionary:  #check if key is present in dictionary
-            if checkExpiry(key):  # check if the key is expired
+            if checkExpiry(key) == False:  # check if the key is expired
                 value = dictionary[key]        # fetching value
                 return f"${len(value)}\r\n{value}\r\n"    # return bulk string with value
-        
-        return "$-1\r\n"   #return null bulk stirng if no key is present or expired
+            else:
+                return "$-1\r\n"   #return null bulk string if key is expired
+
+        return "$-1\r\n"   #return null bulk string if no key is present
                     
 
 
