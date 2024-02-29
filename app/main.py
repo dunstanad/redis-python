@@ -101,7 +101,7 @@ def handleConnections(conn):
     try:
         with conn:
             while True:
-                data = conn.recv(1024*30).decode()
+                data = conn.recv(1024).decode()
                 if not data:
                     break
                 print("Data "+repr(data))  # this will print something like *1\r\n$4\r\nping\r\n   or  *2\r\n$4\r\necho\r\n$5\r\npears\r\n  
