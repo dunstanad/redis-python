@@ -1,6 +1,6 @@
 import socket
 import threading
-import datetime
+from datetime import datetime,timedelta 
 
 # eg. parts = ['*5', '$3', 'set','$5','fruit' ,'$5', 'pears', '$2', 'px', '$3', '100']  
 # *5 : means there are 5 values sent from client side i.e   set fruit pears px 100
@@ -23,7 +23,7 @@ def setKeyExpiry(key, value, microsecs):
     # expire = current + expireIn
     # print("expire -> "+expire)
     print("hey we are in setkeyexpiry")
-    expire = datetime.datetime.now() + datetime.timedelta(microseconds= microsecs)
+    expire = datetime.now() + timedelta(microseconds= microsecs)
     dictionary[key] = {'value': value, 'expiration': expire}
     print("Key: ",key,"  Value: ",value, " Expiration: "+expire)
     print("Key: ",key,"  Value: ",value," Microseconds: "+microsecs)
