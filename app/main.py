@@ -22,7 +22,7 @@ def setKeyExpiry(key, value, microsecs):
     # expireIn = datetime.timedelta(microseconds= microsecs)
     # expire = current + expireIn
     # print("expire -> "+expire)
-
+    print("hey we are in setkeyexpiry")
     expire = datetime.datetime.now() + datetime.timedelta(microseconds= microsecs)
     dictionary[key] = {'value': value, 'expiration': expire}
     print("Key: ",key,"  Value: ",value, " Expiration: "+expire)
