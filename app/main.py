@@ -12,6 +12,7 @@ def checkPX(pxvalue):   # function checks if there is px
     print("WE ARE IN checkPX")
     return pxvalue.lower() == 'px'
 
+
 def setExpiry(key, value, millsecsValue):
     expire = datetime.datetime.now() + datetime.timedelta(milliseconds= millsecsValue)
     dictionary[key] = {'value': value, 'expiration': expire}
@@ -49,16 +50,18 @@ def bulkString(parts):
     elif command == 'set':
         elementsPassed = int(parts[0][1:])    # fetch value *3 -> 3    ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
         # elementsPassed gives no. of elements passed:  set foo bar px 100
-        key = parts[4]
+        key = parts[4] 
         value = parts[6]
       
         if elementsPassed > 3:   # check if more than 3 elements:   set foo bar px 100
             if checkPX(parts[8]):  # check if px exists  
                 setExpiry(key, value, int(parts[10]))  # int(parts[10]) is  milliseconds value
+                print("Expiry set successfully")
                 #return "+OK\r\n"   # send OK as response to set command
         else:
             dictionary[key]  = value  # eg. parts = ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
             print("Key: "+key+"  Value: "+value)
+            
         return "+OK\r\n"   # send OK as response to set command
 
     elif command == 'get': 
