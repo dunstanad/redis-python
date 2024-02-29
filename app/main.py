@@ -12,7 +12,7 @@ def checkPX(pxvalue):   # function checks if there is px
     return pxvalue.lower() == 'px'
 
 def setExpiry(key, value, millsecsValue):
-    expire = datetime.datetime.now() + datetime.timedelta(milliseconds= milli_secs)
+    expire = datetime.datetime.now() + datetime.timedelta(milliseconds= millsecsValue)
     dictionary[key] = {'value': value, 'expiration': expire}
     print("Key: "+parts[4]+"  Value: "+parts[6]+ " Expiration: "+expire)
 
@@ -60,9 +60,9 @@ def bulkString(parts):
             print("Key: "+key+"  Value: "+value)
         return "+OK\r\n"   # send OK as response to set command
 
-    elif command == 'get':  
+    elif command == 'get': 
         key = parts[4]    # eg. parts = ['*2', '$3', 'get','$5','fruit' ]
-        
+
         if key in dictionary and hasExpiry(key):  #check if key is present and has expiration
             if not checkIfExpired(key):  # check if the key is expired
                 value = dictionary[key]        # fetching value
