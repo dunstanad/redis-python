@@ -143,7 +143,6 @@ def main():
         print(serverRoles)
     server_socket = socket.create_server(("localhost", portNumber), reuse_port=True) 
     while True:
-        print("port number",portNumber)
         conn, addr = server_socket.accept() # wait for client
         threading.Thread(target=handleConnections, args=(conn, portNumber)).start()
 
