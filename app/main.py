@@ -103,7 +103,9 @@ def bulkString(parts, portNumber):
         master_replID = serverInfo[portNumber]['master_replid']
         master_replOFFSET = serverInfo[portNumber]['master_repl_offset']
         print(serverInfo[portNumber])
-        return f"$11\r\nrole:master\r\n$54\r\nmaster_replid:{master_replID}\r\n$20\r\nmaster_repl_offset:{master_replOFFSET}\r\n"          
+        return f"$11\r\nrole:master\r\n$40\r\nmaster_replid:{master_replID}\r\n$19\r\nmaster_repl_offset:{master_replOFFSET}\r\n"          
+
+
 
 
 
