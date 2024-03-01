@@ -98,9 +98,10 @@ def bulkString(parts, portNumber):
     elif command == 'info':
         print("Entered INFO")
         print("portNumber: ",portNumber)
-        role = serverRoles[portNumber]
-        if role == "slave":
-            return f"$10\r\nrole:slave\r\n"
+        if portNumber in serverRoles:
+            role = serverRoles[portNumber]
+            if role == "slave":
+                return f"$10\r\nrole:slave\r\n"
         return f"$11\r\nrole:master\r\n"          
 
 
@@ -132,15 +133,14 @@ def main():
 
     if args.port:  #slave
         portNumber = args.port
-        print("SLAVE :",portNumber)
-        
+        print("SLAVE :",portNumber)   
     elif not args.port: # master
         portNumber = 6379  # default port number
         #server_socket = socket.create_server(("localhost", portNumber), reuse_port=True)
     elif args.replicaof:
         serverRoles[portNumber] = "slave"    # set role of server 
         print(serverRoles)
-    server_socket = socket.create_server(("localhost", portNumber), reuse_port=True)
+    server_socket = socket.create_server(("localhost", portNumber), reuse_port=True) 
     while True:
         print("port number",portNumber)
         conn, addr = server_socket.accept() # wait for client
