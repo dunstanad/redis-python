@@ -124,6 +124,7 @@ def handleConnections(conn,portNumber):
                 s = bulkString(parts, portNumber)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
                 print("Response ",s)
                 conn.send(s.encode())   # encoding the bulk string as response
+        conn.close()
     except Exception as e:
         print("The ERROR is ",e)
 
