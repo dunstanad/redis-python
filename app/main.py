@@ -139,7 +139,7 @@ def main():
         server_socket = socket.create_server(("localhost", portNumber), reuse_port=True)
 
     if args.replicaof:
-        serverRoles[portNumber] = "slave"   # set role of server 
+        serverRoles[portNumber] = "slave"    # set role of server 
         print(serverRoles)
     
     while True:
