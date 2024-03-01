@@ -115,7 +115,7 @@ def handleConnections(conn):
 def main():
     pong = "+PONG\r\n"
     
-    parser = argparse.ArgumentParser()  # parse the arguments
+    parser = argparse.ArgumentParser()  # parse the argument
     parser.add_argument("--port", type= int, help="used to set to port number to listen to requests")
     args = parser.parse_args()
 
