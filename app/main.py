@@ -7,6 +7,7 @@ import argparse
 # *5 : means there are 5 values sent from client side i.e   set fruit pears px 100
 
 dictionary = dict()  # store all the key value pairs
+serverRoles = dict() # store role of server   eg. portnum: role  6379:master
 
 
 def checkIfExpired(key):  
@@ -95,11 +96,14 @@ def bulkString(parts):
         return commandGET(parts)       
 
     elif command == 'info':
+        role = serverRoles[portNumber]
+        if role:
+            return "$10\r\nrole:slave\r\n"
         return "$11\r\nrole:master\r\n"          
 
 
 
-def handleConnections(conn):
+def handleConnections(conn,portNumber):
     try:
         with conn:
             while True:
@@ -109,7 +113,7 @@ def handleConnections(conn):
                 print("Data "+repr(data))  # this will print something like *1\r\n$4\r\nping\r\n   or  *2\r\n$4\r\necho\r\n$5\r\npears\r\n  
                 parts = data.strip().split("\r\n")  # ['*1', '$4', 'ping']   ['*2', '$4', 'echo', '$5', 'pears']
                 print(parts)
-                s = bulkString(parts)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
+                s = bulkString(parts, portNumber)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
                 print("Response ",s)
                 conn.send(s.encode())   # encoding the bulk string as response
     except Exception as e:
@@ -117,20 +121,26 @@ def handleConnections(conn):
 
 def main():
     pong = "+PONG\r\n"
+    portNumber = None
     
     parser = argparse.ArgumentParser()  # parse the arguments
     parser.add_argument("--port", type= int, help="used to set to port number to listen to requests")
+    parser.add_argument("--replicaof", nargs=2, metavar=('masterhost', 'masterport'), help="Replicate to another Redis instance")
     args = parser.parse_args()
 
-    if args.port:
+    if args.port:  #slave
         portNumber = args.port
         server_socket = socket.create_server(("localhost", portNumber), reuse_port=True)
-    else:
-        server_socket = socket.create_server(("localhost", 6379), reuse_port=True)
+    elif not args.port: # master
+        portNumber = 6379  # default port number
+        server_socket = socket.create_server(("localhost", portNumber), reuse_port=True)
+
+    if args.replicaof:
+        serverRoles[portNumber] = "slave"   # set role of server 
     
     while True:
         conn, addr = server_socket.accept() # wait for client
-        threading.Thread(target=handleConnections, args=(conn,)).start()
+        threading.Thread(target=handleConnections, args=(conn, portNumber)).start()
 
 if __name__ == "__main__":
     main()
