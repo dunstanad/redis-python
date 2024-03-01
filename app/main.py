@@ -143,6 +143,7 @@ def main():
         print(serverRoles)
     
     while True:
+        print("port number",portNumber)
         conn, addr = server_socket.accept() # wait for client
         threading.Thread(target=handleConnections, args=(conn, portNumber)).start()
 
