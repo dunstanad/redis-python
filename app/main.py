@@ -1,6 +1,7 @@
 import socket
 import threading
 from datetime import datetime,timedelta 
+import argparse
 
 # eg. parts = ['*5', '$3', 'set','$5','fruit' ,'$5', 'pears', '$2', 'px', '$3', '100']  
 # *5 : means there are 5 values sent from client side i.e   set fruit pears px 100
@@ -89,40 +90,9 @@ def bulkString(parts):
 
     elif command == 'set':
         return commandSET(parts)
-    #     elementsPassed = int(parts[0][1:])    # fetch value *3 -> 3    ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
-    #     # elementsPassed gives no. of elements passed:  set foo bar px 100
-    #     key = parts[4] 
-    #     value = parts[6]
-      
-    #     if elementsPassed > 3:   # check if more than 3 elements:   set foo bar px 100
-    #         if checkPX(parts[8]):  # check if px exists  
-    #             print("Going to set expiry")
-    #             microsecs = int(parts[10]) * 1000    # int(parts[10]) is  milliseconds value, later converted to microseconds
-    #             print(microsecs)
-    #             setKeyExpiry(key, value, microsecs)
-                
-    #     else:
-    #         dictionary[key]  = value  # eg. parts = ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
-    #         print("Key: "+key+"  Value: "+value)
-
-    #     return "+OK\r\n"   # send OK as response to set command
-
-    #return commandGET(parts)
+   
     elif command == 'get': 
-        return commandGET(parts)
-        # key = parts[4]    # eg. parts = ['*2', '$3', 'get','$5','fruit' ]
-
-        # if key in dictionary and hasExpiry(key):  #check if key is present and has expiration
-        #     if not checkIfExpired(key):  # check if the key is expired
-        #         value = dictionary[key]['value']        # fetching value
-        #         return f"${len(value)}\r\n{value}\r\n"    # return bulk string with value
-
-        # elif key in dictionary and not hasExpiry(key): #check if key is present and has no expiration
-        #     value = dictionary[key]        # fetching value
-        #     return f"${len(value)}\r\n{value}\r\n"    # return bulk string with value
-
-        # return "$-1\r\n"   #return null bulk string if no key is present or expired
-                    
+        return commandGET(parts)                 
 
 
 
@@ -143,12 +113,17 @@ def handleConnections(conn):
         print("The ERROR is ",e)
 
 def main():
-    # You can use print statements as follows for debugging, they'll be visible when running tests.
-    print("Logs from your program will appear here!")
     pong = "+PONG\r\n"
     
-    server_socket = socket.create_server(("localhost", 6379), reuse_port=True)
+    parser = argparse.ArgumentParser()  # parse the arguments
+    parser.add_argument("--port", type= int, help="used to set to port number to listen to requests")
+    args = parser.parse_args()
 
+    if args.port:
+        portNumber = args.port
+        server_socket = socket.create_server(("localhost", portNumber), reuse_port=True)
+    else:
+        server_socket = socket.create_server(("localhost", 6379), reuse_port=True)
     
     while True:
         conn, addr = server_socket.accept() # wait for client
