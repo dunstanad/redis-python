@@ -73,7 +73,7 @@ def commandGET(parts):
 
 
 
-def bulkString(parts):
+def bulkString(parts, portNumber):
      # eg. parts = ['*5', '$3', 'set','$5','fruit' ,'$5', 'pears', '$2', 'px', '$3', '100']
      # eg. parts = ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
 
