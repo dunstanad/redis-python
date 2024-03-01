@@ -137,6 +137,7 @@ def main():
 
     if args.replicaof:
         serverRoles[portNumber] = "slave"   # set role of server 
+        print(serverRoles)
     
     while True:
         conn, addr = server_socket.accept() # wait for client
