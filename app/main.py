@@ -97,6 +97,7 @@ def bulkString(parts, portNumber):
 
     elif command == 'info':
         role = serverRoles[portNumber]
+        print(serverRoles)
         if role:
             return "$10\r\nrole:slave\r\n"
         return "$11\r\nrole:master\r\n"          
