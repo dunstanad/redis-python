@@ -137,7 +137,8 @@ def main():
     elif not args.port: # master
         portNumber = 6379  # default port number
         #server_socket = socket.create_server(("localhost", portNumber), reuse_port=True)
-    elif args.replicaof:
+    
+    if args.replicaof:
         serverRoles[portNumber] = "slave"    # set role of server 
         print(serverRoles)
     server_socket = socket.create_server(("localhost", portNumber), reuse_port=True) 
