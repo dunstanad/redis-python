@@ -7,7 +7,7 @@ import argparse
 # *5 : means there are 5 values sent from client side i.e   set fruit pears px 100
 
 dictionary = dict()  # store all the key value pairs
-serverRoles = dict() # store role of server   eg. portnum: role  6379:master
+serverInfo = dict() # store role of server   eg. portnum: role  6379:master
 
 
 def checkIfExpired(key):  
@@ -96,8 +96,8 @@ def bulkString(parts, portNumber):
         return commandGET(parts)       
 
     elif command == 'info':
-        if portNumber in serverRoles:
-            role = serverRoles[portNumber]
+        if portNumber in serverInfo:
+            role = serverInfo[portNumber]['role']
             if role == "slave":
                 return f"$10\r\nrole:slave\r\n"
         #master_replid = "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb"
@@ -136,11 +136,14 @@ def main():
         print("SLAVE :",portNumber)   
     elif not args.port: # master
         portNumber = 6379  # default port number
+        serverInfo[portNumber] = {'role':'master'}
+        serverInfo[portNumber]['master_replid'] = "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb"
+        serverInfo[portNumber]['master_repl_offset'] = 0
         #server_socket = socket.create_server(("localhost", portNumber), reuse_port=True)
     
     if args.replicaof:
-        serverRoles[portNumber] = "slave"    # set role of server 
-        print(serverRoles)
+        serverInfo[portNumber] = {'role':'slave'}   # set role of server 
+        print(serverInfo)
     server_socket = socket.create_server(("localhost", portNumber), reuse_port=True) 
     while True:
         conn, addr = server_socket.accept() # wait for client
