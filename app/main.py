@@ -92,7 +92,10 @@ def bulkString(parts):
         return commandSET(parts)
    
     elif command == 'get': 
-        return commandGET(parts)                 
+        return commandGET(parts)       
+
+    elif command == 'info':
+        return "$11\r\nrole:master\r\n"          
 
 
 
@@ -115,7 +118,7 @@ def handleConnections(conn):
 def main():
     pong = "+PONG\r\n"
     
-    parser = argparse.ArgumentParser()  # parse the argument
+    parser = argparse.ArgumentParser()  # parse the arguments
     parser.add_argument("--port", type= int, help="used to set to port number to listen to requests")
     args = parser.parse_args()
 
