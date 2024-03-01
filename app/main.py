@@ -131,6 +131,7 @@ def main():
 
     if args.port:  #slave
         portNumber = args.port
+        print("SLAVE :",portNumber)
         server_socket = socket.create_server(("localhost", portNumber), reuse_port=True)
     elif not args.port: # master
         portNumber = 6379  # default port number
