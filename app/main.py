@@ -7,8 +7,14 @@ import argparse
 # *5 : means there are 5 values sent from client side i.e   set fruit pears px 100
 
 dictionary = dict()  # store all the key value pairs
-serverInfo = dict() # store role of server   eg. portnum: role  6379:master
-
+serverInfo = dict() # store info about server   eg. portnum: role  6379:master
+isMaster = True
+serverInfo = {
+        "role": "master" if IS_MASTER else "slave",
+        "master_replid": "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb",
+            "master_repl_offset": 0,
+        
+}
 
 def checkIfExpired(key):  
     if datetime.now() <  dictionary[key]['expiration']  :
@@ -101,12 +107,10 @@ def bulkString(parts, portNumber):
             if role == "slave":
                 print(serverInfo)
                 return f"$10\r\nrole:slave\r\n"
-        # master_replID = serverInfo[portNumber]['master_replid']
-        # master_replOFFSET = serverInfo[portNumber]['master_repl_offset']
-        master_replID = serverInfo[portNumber].get('master_replid', '')
-        master_replOFFSET = serverInfo[portNumber].get('master_repl_offset', '')
+        master_replID = serverInfo['master_replid']
+        master_replOFFSET = serverInfo['master_repl_offset']
         print(serverInfo)
-        return f"$11\r\nrole:master\r\n$40\r\nmaster_replid:{master_replID}\r\n$19\r\nmaster_repl_offset:{master_replOFFSET}\r\n"          
+        return f"role:master\r\nmaster_replid:{master_replID}\r\nmaster_repl_offset:{master_replOFFSET}\r\n"          
 
 
 
@@ -125,7 +129,7 @@ def handleConnections(conn,portNumber):
                 s = bulkString(parts, portNumber)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
                 print("Response ",s)
                 conn.send(s.encode())   # encoding the bulk string as response
-        conn.close()
+       
     except Exception as e:
         print("The ERROR is ",e)
 
@@ -140,18 +144,17 @@ def main():
 
     if args.port:  #slave
         portNumber = args.port
+        isMaster = False
         print("SLAVE :",portNumber)   
     elif not args.port: # master
         portNumber = 6379  # default port number
-        serverInfo[portNumber] = {'role':'master'}
-        serverInfo[portNumber]['master_replid'] = "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb"
-        serverInfo[portNumber]['master_repl_offset'] = 0
         #server_socket = socket.create_server(("localhost", portNumber), reuse_port=True)
     
     if args.replicaof:
         serverInfo[portNumber] = {'role':'slave'}   # set role of server 
-        print(serverInfo)
+
     server_socket = socket.create_server(("localhost", portNumber), reuse_port=True) 
+
     while True:
         conn, addr = server_socket.accept() # wait for client
         threading.Thread(target=handleConnections, args=(conn, portNumber)).start()
