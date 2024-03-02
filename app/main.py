@@ -78,7 +78,7 @@ def commandGET(parts):
 
 
 
-def bulkString(parts, is_Master):
+def bulkString(parts, isMaster):
      # eg. parts = ['*5', '$3', 'set','$5','fruit' ,'$5', 'pears', '$2', 'px', '$3', '100']
      # eg. parts = ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
 
@@ -101,7 +101,7 @@ def bulkString(parts, is_Master):
         return commandGET(parts)       
 
     elif command == 'info':
-        if is_Master:
+        if isMaster:
                     role = serverInfo['role']
                     master_replID = serverInfo['master_replid']
                     master_replOFFSET = serverInfo['master_repl_offset']
@@ -114,7 +114,7 @@ def bulkString(parts, is_Master):
 
 
 
-def handleConnections(conn, is_Master):
+def handleConnections(conn, isMaster):
     try:
         with conn:
             while True:
@@ -124,7 +124,7 @@ def handleConnections(conn, is_Master):
                 print("Data "+repr(data))  # this will print something like *1\r\n$4\r\nping\r\n   or  *2\r\n$4\r\necho\r\n$5\r\npears\r\n  
                 parts = data.strip().split("\r\n")  # ['*1', '$4', 'ping']   ['*2', '$4', 'echo', '$5', 'pears']
                 print(parts)
-                s = bulkString(parts, is_Master)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
+                s = bulkString(parts, isMaster)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
                 print("Response ",s)
                 conn.send(s.encode())   # encoding the bulk string as response
        
@@ -142,20 +142,20 @@ def main():
 
     if args.port:  #slave
         portNumber = args.port
-        is_Master = False
+        isMaster = False
         print("SLAVE :",portNumber)   
     elif not args.port: # master
         portNumber = 6379  # default port number
         #server_socket = socket.create_server(("localhost", portNumber), reuse_port=True)
     
     if args.replicaof:
-        is_Master = False 
+        isMaster = False 
 
     server_socket = socket.create_server(("localhost", portNumber), reuse_port=True) 
 
     while True:
         conn, addr = server_socket.accept() # wait for client
-        threading.Thread(target=handleConnections, args=(conn, is_Master)).start()
+        threading.Thread(target=handleConnections, args=(conn, isMaster)).start()
 
 if __name__ == "__main__":
     main()
