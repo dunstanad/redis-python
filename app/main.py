@@ -99,12 +99,13 @@ def bulkString(parts, portNumber):
         if portNumber in serverInfo:
             role = serverInfo[portNumber]['role']
             if role == "slave":
+                print(serverInfo)
                 return f"$10\r\nrole:slave\r\n"
         # master_replID = serverInfo[portNumber]['master_replid']
         # master_replOFFSET = serverInfo[portNumber]['master_repl_offset']
         master_replID = serverInfo[portNumber].get('master_replid', '')
         master_replOFFSET = serverInfo[portNumber].get('master_repl_offset', '')
-        print(serverInfo[portNumber])
+        print(serverInfo)
         return f"$11\r\nrole:master\r\n$40\r\nmaster_replid:{master_replID}\r\n$19\r\nmaster_repl_offset:{master_replOFFSET}\r\n"          
 
 
