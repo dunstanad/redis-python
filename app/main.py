@@ -8,7 +8,6 @@ import argparse
 
 dictionary = dict()  # store all the key value pairs
 serverInfo = dict() # store info about server   eg. portnum: role  6379:master
-isMaster = True
 serverInfo = {
         "role": "master" if isMaster else "slave",
         "master_replid": "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb",
@@ -79,7 +78,7 @@ def commandGET(parts):
 
 
 
-def bulkString(parts, isMaster):
+def bulkString(parts, is_Master):
      # eg. parts = ['*5', '$3', 'set','$5','fruit' ,'$5', 'pears', '$2', 'px', '$3', '100']
      # eg. parts = ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
 
@@ -102,7 +101,7 @@ def bulkString(parts, isMaster):
         return commandGET(parts)       
 
     elif command == 'info':
-        if isMaster:
+        if is_Master:
                     role = serverInfo['role']
                     master_replID = serverInfo['master_replid']
                     master_replOFFSET = serverInfo['master_repl_offset']
@@ -115,7 +114,7 @@ def bulkString(parts, isMaster):
 
 
 
-def handleConnections(conn, isMaster):
+def handleConnections(conn, is_Master):
     try:
         with conn:
             while True:
@@ -125,7 +124,7 @@ def handleConnections(conn, isMaster):
                 print("Data "+repr(data))  # this will print something like *1\r\n$4\r\nping\r\n   or  *2\r\n$4\r\necho\r\n$5\r\npears\r\n  
                 parts = data.strip().split("\r\n")  # ['*1', '$4', 'ping']   ['*2', '$4', 'echo', '$5', 'pears']
                 print(parts)
-                s = bulkString(parts, isMaster)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
+                s = bulkString(parts, is_Master)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
                 print("Response ",s)
                 conn.send(s.encode())   # encoding the bulk string as response
        
@@ -143,20 +142,20 @@ def main():
 
     if args.port:  #slave
         portNumber = args.port
-        isMaster = False
+        is_Master = False
         print("SLAVE :",portNumber)   
     elif not args.port: # master
         portNumber = 6379  # default port number
         #server_socket = socket.create_server(("localhost", portNumber), reuse_port=True)
     
     if args.replicaof:
-        isMaster = False 
+        is_Master = False 
 
     server_socket = socket.create_server(("localhost", portNumber), reuse_port=True) 
 
     while True:
         conn, addr = server_socket.accept() # wait for client
-        threading.Thread(target=handleConnections, args=(conn, isMaster)).start()
+        threading.Thread(target=handleConnections, args=(conn, is_Master)).start()
 
 if __name__ == "__main__":
     main()
