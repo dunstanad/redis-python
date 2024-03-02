@@ -106,8 +106,8 @@ def bulkString(parts, isMaster):
                     master_replID = serverInfo['master_replid']
                     master_replOFFSET = serverInfo['master_repl_offset']
                     print(role)
-                    return f"$5\r\nrole:{role}\r\n$14\r\nmaster_replid:{master_replID}\r\n$19\r\nmaster_repl_offset:{master_replOFFSET}\r\n"
-
+                    #return f"$5\r\nrole:{role}\r\n$14\r\nmaster_replid:{master_replID}\r\n$19\r\nmaster_repl_offset:{master_replOFFSET}\r\n"
+                    return f"$5\r\nrole:{role}\r\n"
         else:
             print(serverInfo)
             return f"$10\r\nrole:slave\r\n"
