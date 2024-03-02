@@ -105,7 +105,7 @@ def bulkString(parts, isMaster):
                     role = serverInfo['role']
                     master_replID = serverInfo['master_replid']
                     master_replOFFSET = serverInfo['master_repl_offset']
-                    role_str = "role" + role
+                    role_str = "role:" + role
                     replid_str = "master_replid:" + master_replID
                     offset_str = "master_repl_offset:" + str(master_replOFFSET)
                     print(role)
