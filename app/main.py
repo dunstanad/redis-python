@@ -10,9 +10,9 @@ dictionary = dict()  # store all the key value pairs
 serverInfo = dict() # store info about server   eg. portnum: role  6379:master
 isMaster = True
 serverInfo = {
-        "role": "master" if IS_MASTER else "slave",
+        "role": "master" if isMaster else "slave",
         "master_replid": "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb",
-            "master_repl_offset": 0,
+        "master_repl_offset": 0,
         
 }
 
