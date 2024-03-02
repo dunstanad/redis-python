@@ -157,11 +157,13 @@ def main():
 
     #server_socket = socket.create_server(("localhost", portNumber), reuse_port=True) 
 
-    while True:
-         
-        server_socket = socket.create_server(("localhost", portNumber), reuse_port=True)
-        conn, addr = server_socket.accept() # wait for client
-        threading.Thread(target=handleConnections, args=(conn, isMaster)).start()
+    try:
+        while True:     
+            server_socket = socket.create_server(("localhost", portNumber), reuse_port=True)
+            conn, addr = server_socket.accept() # wait for client
+            threading.Thread(target=handleConnections, args=(conn, isMaster)).start()
+    except Exception as e:
+        print("The ERROR is ",e)
 
 if __name__ == "__main__":
     main()
