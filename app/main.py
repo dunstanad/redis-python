@@ -134,7 +134,7 @@ def handleConnections(conn, isMaster):
 def main():
     pong = "+PONG\r\n"
     portNumber = None
-    
+    isMaster = True
     parser = argparse.ArgumentParser()  # parse the arguments
     parser.add_argument("--port", type= int, help="used to set to port number to listen to requests")
     parser.add_argument("--replicaof", nargs=2, metavar=('masterhost', 'masterport'), help="Replicate to another Redis instance")
