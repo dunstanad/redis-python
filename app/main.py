@@ -7,8 +7,8 @@ import argparse
 # *5 : means there are 5 values sent from client side i.e   set fruit pears px 100
 
 dictionary = dict()  # store all the key value pairs
-serverInfo = dict() # store info about server   eg. portnum: role  6379:master
-serverInfo = {
+ 
+serverInfo = {  # store info about server   eg. portnum: role  6379:master
         "role": "master",
         "master_replid": "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb",
         "master_repl_offset": 0,
