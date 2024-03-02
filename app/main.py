@@ -155,7 +155,7 @@ def main():
 
     while True:
         conn, addr = server_socket.accept() # wait for client
-        threading.Thread(target=handleConnections, args=(conn, isMaster)).start()
+        threading.Thread(target=handleConnections, args=(conn, is_Mastee)).start()
 
 if __name__ == "__main__":
     main()
