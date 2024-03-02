@@ -79,7 +79,7 @@ def commandGET(parts):
 
 
 
-def bulkString(parts, portNumber):
+def bulkString(parts):
      # eg. parts = ['*5', '$3', 'set','$5','fruit' ,'$5', 'pears', '$2', 'px', '$3', '100']
      # eg. parts = ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
 
@@ -102,22 +102,20 @@ def bulkString(parts, portNumber):
         return commandGET(parts)       
 
     elif command == 'info':
-        if portNumber in serverInfo:
-            role = serverInfo[portNumber]['role']
-            if role == "slave":
-                print(serverInfo)
-                return f"$10\r\nrole:slave\r\n"
-        role = serverInfo['role']
-        master_replID = serverInfo['master_replid']
-        master_replOFFSET = serverInfo['master_repl_offset']
-        print(serverInfo)
-        return f"$5\r\nrole:{role}\r\n$14\r\nmaster_replid:{master_replID}\r\n$19\r\nmaster_repl_offset:{master_replOFFSET}\r\n"          
+        if isMaster:
+                    role = serverInfo['role']
+                    master_replID = serverInfo['master_replid']
+                    master_replOFFSET = serverInfo['master_repl_offset']
+                    return f"$5\r\nrole:{role}\r\n$14\r\nmaster_replid:{master_replID}\r\n$19\r\nmaster_repl_offset:{master_replOFFSET}\r\n"
+
+        else:
+            print(serverInfo)
+            return f"$10\r\nrole:slave\r\n"
 
 
 
 
-
-def handleConnections(conn,portNumber):
+def handleConnections(conn):
     try:
         with conn:
             while True:
@@ -127,7 +125,7 @@ def handleConnections(conn,portNumber):
                 print("Data "+repr(data))  # this will print something like *1\r\n$4\r\nping\r\n   or  *2\r\n$4\r\necho\r\n$5\r\npears\r\n  
                 parts = data.strip().split("\r\n")  # ['*1', '$4', 'ping']   ['*2', '$4', 'echo', '$5', 'pears']
                 print(parts)
-                s = bulkString(parts, portNumber)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
+                s = bulkString(parts)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
                 print("Response ",s)
                 conn.send(s.encode())   # encoding the bulk string as response
        
@@ -152,13 +150,13 @@ def main():
         #server_socket = socket.create_server(("localhost", portNumber), reuse_port=True)
     
     if args.replicaof:
-        serverInfo[portNumber] = {'role':'slave'}   # set role of server 
+        isMaster = False 
 
-    server_socket = socket.create_server(("localhost", portNumber), reuse_port=True) 
+    server_socket = socket.create_server(("localhost", ), reuse_port=True) 
 
     while True:
         conn, addr = server_socket.accept() # wait for client
-        threading.Thread(target=handleConnections, args=(conn, portNumber)).start()
+        threading.Thread(target=handleConnections, args=(conn,)).start()
 
 if __name__ == "__main__":
     main()
