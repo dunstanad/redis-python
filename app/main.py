@@ -152,7 +152,7 @@ def main():
     if args.replicaof:
         isMaster = False 
 
-    server_socket = socket.create_server(("localhost", ), reuse_port=True) 
+    server_socket = socket.create_server(("localhost", portNumber), reuse_port=True) 
 
     while True:
         conn, addr = server_socket.accept() # wait for client
