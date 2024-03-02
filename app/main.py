@@ -79,7 +79,7 @@ def commandGET(parts):
 
 
 
-def bulkString(parts):
+def bulkString(parts, isMaster):
      # eg. parts = ['*5', '$3', 'set','$5','fruit' ,'$5', 'pears', '$2', 'px', '$3', '100']
      # eg. parts = ['*3', '$3', 'set','$5','fruit' ,'$5', 'pears']
 
@@ -115,7 +115,7 @@ def bulkString(parts):
 
 
 
-def handleConnections(conn):
+def handleConnections(conn, isMaster):
     try:
         with conn:
             while True:
@@ -125,7 +125,7 @@ def handleConnections(conn):
                 print("Data "+repr(data))  # this will print something like *1\r\n$4\r\nping\r\n   or  *2\r\n$4\r\necho\r\n$5\r\npears\r\n  
                 parts = data.strip().split("\r\n")  # ['*1', '$4', 'ping']   ['*2', '$4', 'echo', '$5', 'pears']
                 print(parts)
-                s = bulkString(parts)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
+                s = bulkString(parts, isMaster)  # final string   $4\r\nPONG\r\n  or  $5\r\npears\r\n
                 print("Response ",s)
                 conn.send(s.encode())   # encoding the bulk string as response
        
@@ -156,7 +156,7 @@ def main():
 
     while True:
         conn, addr = server_socket.accept() # wait for client
-        threading.Thread(target=handleConnections, args=(conn,)).start()
+        threading.Thread(target=handleConnections, args=(conn, isMaster)).start()
 
 if __name__ == "__main__":
     main()
